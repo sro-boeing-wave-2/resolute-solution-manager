@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    build: ./Resolute.ChatHub
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+  db:
+    image: mvertes/alpine-mongo
+    ports:
+      - "27017:27017"
