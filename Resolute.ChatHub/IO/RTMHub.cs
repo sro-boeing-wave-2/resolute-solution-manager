@@ -19,6 +19,8 @@ namespace Resolute.ChatHub.IO
         public async void AssignMeToUser(string groupId)
         {
             Console.WriteLine("Allocating To User");
+            GroupHandler.UserGroupMapper.Add(Context.ConnectionId, groupId);
+            Console.WriteLine($"Bot Trying to connect to {groupId}");
             await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
         }
 
@@ -29,6 +31,7 @@ namespace Resolute.ChatHub.IO
                 Console.WriteLine("Bot Factory Closing");
                 BotFactoryManager.Factories.Remove(Context.ConnectionId);
             }
+
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -37,6 +40,9 @@ namespace Resolute.ChatHub.IO
         {
             Console.WriteLine(query);
             var groupId = ObjectId.GenerateNewId().ToString();
+            Groups.AddToGroupAsync(Context.ConnectionId, groupId);
+            GroupHandler.UserGroupMapper.Add(Context.ConnectionId, groupId);
+            Console.WriteLine($"Bot is connecting to {groupId}");
             var BotFactory = BotFactoryManager.Factory;
             if (!string.IsNullOrEmpty(BotFactory))
             {
@@ -44,10 +50,11 @@ namespace Resolute.ChatHub.IO
             }
         }
 
+        // User, Agent and Bot says Send Message
         public async void SendMessage(string message)
         {
             var groupId = GroupHandler.UserGroupMapper[Context.ConnectionId];
-            await Clients.Group(groupId).SendAsync("message", message);
+            await Clients.GroupExcept(groupId, Context.ConnectionId).SendAsync("message", message);
         }
     }
 }

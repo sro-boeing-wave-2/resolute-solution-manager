@@ -43,7 +43,7 @@ namespace Resolute.ChatHub.Controllers
                 var solutionTemplate = new SolutionTemplate();
                 solutionTemplate.Intent = solutionTemplateViewModel.Intent;
                 solutionTemplate.Tasks = deserializer.Deserialize(new StringReader(solutionTemplateViewModel.Tasks.ToString()));
-
+                Console.WriteLine(solutionTemplate.Tasks);
                 var solutionTemplateAsJsonString = JsonConvert.SerializeObject(solutionTemplate);
                 var solutionTemplateAsBsonDocument = BsonDocument.Parse(solutionTemplateAsJsonString);
                 await _service.CreateSolution(solutionTemplateAsBsonDocument);
