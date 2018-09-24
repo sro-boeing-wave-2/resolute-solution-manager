@@ -23,6 +23,12 @@ namespace Resolute.ChatHub.Services
         {
             var filter = Builders<BsonDocument>.Filter.Eq("Intent", intent);
             var documents = _context.Solutions.Find(filter).ToList();
+
+            foreach(var d in documents)
+            {
+                d.Remove("_id");
+            }
+
             return documents.ToJson();
         }
 
