@@ -13,6 +13,8 @@ using System.Reflection;
 using Resolute.ChatHub.Models;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using System.Dynamic;
+using Newtonsoft.Json.Converters;
 
 
 namespace Resolute.ChatHub.Controllers
@@ -32,6 +34,7 @@ namespace Resolute.ChatHub.Controllers
         [Route("{intent}")]
         public IActionResult GetSolutionTemplatesByIntent(string intent)
         {
+            Console.WriteLine(intent);
             var solutions = _service.GetSolutionsByIntentAsync(intent);
             return Ok(solutions);
         }
@@ -48,36 +51,52 @@ namespace Resolute.ChatHub.Controllers
 
                 List<dynamic> actions = new List<dynamic>();
 
-                foreach(var e in solutionTemplate.Tasks as List<object>)
+                foreach(var e in solutionTemplate.Tasks as List<dynamic>)
                 {
+                    Guid g = Guid.NewGuid();
+                    string GuidString = Convert.ToBase64String(g.ToByteArray());
+                    GuidString = GuidString.Replace("=", "");
+                    GuidString = GuidString.Replace("+", "");
+
+                    if (e["stage"] == "action")
+                        e["tags"] = new List<string> { GuidString };
+
                     var data = JObject.Parse(JsonConvert.SerializeObject(e));
+                    //Console.WriteLine(data);
 
                     if (data["stage"].ToString() == "action")
                     {
                         var values = data.ToObject<Dictionary<string, object>>();
                         values.Remove("stage");
                         actions.Add(values);
+
+                        try {
+                            if (values["register"] != null)
+                            {
+                                object redisobj = new { name = "Store gitdata in redis", shell = "redis-cli HSET ${{threadId}} gitdata {{" + values["register"] + ".content}}", tags = values["tags"] };
+                                actions.Add(redisobj);
+                            }
+                        }
+                        catch(Exception ex){}
                     }
                 }
+                Console.WriteLine(JsonConvert.SerializeObject(solutionTemplate.Tasks));
 
-                dynamic scriptobj = new { hosts = "localhost", gather_facts = false, tasks = actions };
-                List<dynamic> final = new List<dynamic>() { scriptobj };
-                Console.WriteLine(JsonConvert.SerializeObject(final));
-
+                object scriptobj = new { hosts = "localhost", gather_facts = false, tasks = actions };
+                List<object> final = new List<object>() { scriptobj };
+                var finalJson = JsonConvert.SerializeObject(final);
                 
-                var serializer = new YamlDotNet.Serialization.Serializer();
-                //using (var sw = new StringWriter())
-                //{
-                //    serializer.Serialize(sw, actions);
-                //    var yaml = sw.ToString();
-                //    Console.WriteLine(sw);
-                //}
-                string yaml = serializer.Serialize(final);
-                Console.Write(yaml);
+                var expConverter = new ExpandoObjectConverter();
+                dynamic desiralizeObject = JsonConvert.DeserializeObject<List<ExpandoObject>>(finalJson, expConverter);
 
+                var serializer = new YamlDotNet.Serialization.Serializer();
+                string yaml = serializer.Serialize(desiralizeObject);
+                //Console.Write(solutionTemplate.Intent);
+                solutionTemplate.Actions = yaml;
 
                 var solutionTemplateAsJsonString = JsonConvert.SerializeObject(solutionTemplate);
                 var solutionTemplateAsBsonDocument = BsonDocument.Parse(solutionTemplateAsJsonString);
+                Console.WriteLine(solutionTemplateAsBsonDocument);
                 await _service.CreateSolution(solutionTemplateAsBsonDocument);
                 return Ok();
             }
