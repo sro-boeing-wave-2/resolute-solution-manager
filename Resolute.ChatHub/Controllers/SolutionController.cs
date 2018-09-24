@@ -34,7 +34,6 @@ namespace Resolute.ChatHub.Controllers
         [Route("{intent}")]
         public IActionResult GetSolutionTemplatesByIntent(string intent)
         {
-            Console.WriteLine(intent);
             var solutions = _service.GetSolutionsByIntentAsync(intent);
             return Ok(solutions);
         }

@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Resolute.ChatHub.Models
 {
     public class SolutionTemplateViewModel
@@ -8,6 +10,8 @@ namespace Resolute.ChatHub.Models
 
     public class SolutionTemplate
     {
+        [JsonIgnore]
+        public string _id { get; set; }
         public string Intent { get; set; }
         public object Tasks { get; set; }
         public string Actions { get; set; }

@@ -8,6 +8,8 @@ using MongoDB.Driver.Core;
 using Resolute.ChatHub.Data;
 using Resolute.ChatHub.Models;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Resolute.ChatHub.Services
 {
@@ -23,6 +25,12 @@ namespace Resolute.ChatHub.Services
         {
             var filter = Builders<BsonDocument>.Filter.Eq("Intent", intent);
             var documents = _context.Solutions.Find(filter).ToList();
+
+            foreach(var d in documents)
+            {
+                d.Remove("_id");
+            }
+
             return documents.ToJson();
         }
 
