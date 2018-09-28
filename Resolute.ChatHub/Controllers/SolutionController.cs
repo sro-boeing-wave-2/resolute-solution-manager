@@ -72,7 +72,7 @@ namespace Resolute.ChatHub.Controllers
                         try {
                             if (values["register"] != null)
                             {
-                                object redisobj = new { name = "Store gitdata in redis", shell = "redis-cli HSET ${{threadId}} gitdata {{" + values["register"] + ".content}}", tags = values["tags"] };
+                                object redisobj = new { name = "Store gitdata in redis", shell = "redis-cli HSET ${{threadId}}" + " "+ values["register"] + " " + "'{{" + values["register"] + ".content}}'", tags = values["tags"] };
                                 actions.Add(redisobj);
                             }
                         }

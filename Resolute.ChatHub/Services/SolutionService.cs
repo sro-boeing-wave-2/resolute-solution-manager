@@ -30,7 +30,7 @@ namespace Resolute.ChatHub.Services
             {
                 d.Remove("_id");
             }
-
+            
             return documents.ToJson();
         }
 
