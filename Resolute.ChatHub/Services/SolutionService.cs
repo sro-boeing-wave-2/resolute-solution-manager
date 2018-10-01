@@ -21,14 +21,8 @@ namespace Resolute.ChatHub.Services
 
         public String GetSolutionsByIntentAsync(string intent)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("Intent", intent);
+            var filter = Builders<BsonDocument>.Filter.Eq("intent", intent);
             var documents = _context.Solutions.Find(filter).ToList();
-
-            foreach(var d in documents)
-            {
-                d.Remove("_id");
-            }
-
             return documents.ToJson();
         }
 

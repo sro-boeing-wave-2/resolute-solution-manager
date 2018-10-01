@@ -10,6 +10,6 @@ namespace Resolute.ChatHub.Models
     {
         public string Intent { get; set; }
         public object Tasks { get; set; }
-        public string Actions { get; set; }
+        public object Actions { get; set; }
     }
 }
