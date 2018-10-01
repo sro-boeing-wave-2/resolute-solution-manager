@@ -27,6 +27,7 @@ namespace Resolute.ChatHub.Controllers
         public ISolutionService _service;
         public SolutionController(ISolutionService service)
         {
+            //something
             _service = service;
         }
 
