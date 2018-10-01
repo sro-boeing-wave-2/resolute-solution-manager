@@ -1,11 +1,11 @@
 version: '3'
 services:
   web:
-    container_name: Resolute-Solution-Manager
+    container_name: solution-manager
     build: ./Resolute.ChatHub
     labels:
-        SERVICE_80_NAME: Resolute-Solution-Manager
-        SERVICE_TAG: ResoluteSolutionManager
+        SERVICE_80_NAME: solution-manager
+        SERVICE_TAG: solutionmanager
     depends_on:
       - db
   db:
