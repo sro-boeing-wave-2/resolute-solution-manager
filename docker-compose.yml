@@ -1,12 +1,14 @@
 version: '3'
 services:
   web:
+    container_name: Resolute-Solution-Manager
     build: ./Resolute.ChatHub
-    ports:
-      - "80:80"
+    labels:
+        SERVICE_80_NAME: Resolute-Solution-Manager
+        SERVICE_TAG: ResoluteSolutionManager
     depends_on:
       - db
   db:
     image: mvertes/alpine-mongo
-    ports:
-      - "27017:27017"
+    volumes:
+        - "/data/solution-manager:/var/lib/mongodb"
