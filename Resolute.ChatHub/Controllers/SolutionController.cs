@@ -106,5 +106,11 @@ namespace Resolute.ChatHub.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete]
+        [Route("{intent}")]
+        public async Task DeleteSolutionTemplate(string intent){
+             _service.DeleteSolutionByIntentAsync(intent);
+        }
     }
 }

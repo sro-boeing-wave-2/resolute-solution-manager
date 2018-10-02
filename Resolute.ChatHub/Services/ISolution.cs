@@ -9,5 +9,7 @@ namespace Resolute.ChatHub.Services
     {
          String GetSolutionsByIntentAsync(string intent);
          Task CreateSolution(BsonDocument solution);
+
+        void DeleteSolutionByIntentAsync(string intent);
     }
 }

@@ -36,5 +36,11 @@ namespace Resolute.ChatHub.Services
         {
             await _context.Solutions.InsertOneAsync(solution);
         }
+
+        public void DeleteSolutionByIntentAsync(string intent)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("Intent", intent);
+             _context.Solutions.DeleteManyAsync(filter);
+        }
     }
 }
