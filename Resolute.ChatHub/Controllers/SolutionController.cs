@@ -43,13 +43,14 @@ namespace Resolute.ChatHub.Controllers
         [HttpPost]
         public async Task<IActionResult> PostSolutionTemplate([FromBody] SolutionTemplateViewModel solutionTemplateViewModel)
         {
+            
             try
             {
                 var deserializer = new Deserializer();
                 var solutionTemplate = new SolutionTemplate();
                 Console.WriteLine(JsonConvert.SerializeObject(solutionTemplateViewModel));
                 solutionTemplate.Intent = solutionTemplateViewModel.Intent;
-                Console.WriteLine(JsonConvert.SerializeObject(solutionTemplate));
+                
                 solutionTemplate.Tasks = deserializer.Deserialize(new StringReader(solutionTemplateViewModel.Tasks));
                 Console.WriteLine(JsonConvert.SerializeObject(solutionTemplate));
 
