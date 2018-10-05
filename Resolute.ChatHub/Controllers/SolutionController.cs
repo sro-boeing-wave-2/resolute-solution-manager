@@ -50,7 +50,7 @@ namespace Resolute.ChatHub.Controllers
                 Console.WriteLine(JsonConvert.SerializeObject(solutionTemplateViewModel));
                 solutionTemplate.Intent = solutionTemplateViewModel.Intent;
                 Console.WriteLine(JsonConvert.SerializeObject(solutionTemplate));
-                solutionTemplate.Tasks = JsonConvert.DeserializeObject(solutionTemplateViewModel.Tasks);
+                solutionTemplate.Tasks = deserializer.Deserialize(new StringReader(solutionTemplateViewModel.Tasks));
                 Console.WriteLine(JsonConvert.SerializeObject(solutionTemplate));
 
                 List<dynamic> actions = new List<dynamic>();
