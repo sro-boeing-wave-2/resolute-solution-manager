@@ -43,7 +43,7 @@ namespace Resolute.ChatHub.Controllers
         [HttpPost]
         public async Task<IActionResult> PostSolutionTemplate([FromBody] SolutionTemplateViewModel solutionTemplateViewModel)
         {
-            
+            Console.WriteLine(solutionTemplateViewModel);
             try
             {
                 var deserializer = new Deserializer();
